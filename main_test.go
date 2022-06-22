@@ -20,6 +20,22 @@ func TestGoccyYamlParser(t *testing.T) {
 	require.NoError(t, err)
 	require.NoError(t, f.Close())
 
+	t.Run("non-deterministic", func(t *testing.T) {
+		var props any
+		in := bytes.NewBuffer(raw)
+		dec := yaml2.NewDecoder(in)
+		assert.NoError(t, dec.Decode(&props))
+
+		out := bytes.NewBuffer(nil)
+		enc := yaml2.NewEncoder(out, yaml2.Indent(2))
+		assert.NoError(t, enc.Encode(props))
+		assert.NotEqual(t, string(raw), out.String())
+		// should be equal, but have problems:
+		// - ordering
+		// - indent
+		// - empty vs null
+	})
+
 	t.Run("deterministic", func(t *testing.T) {
 		var props any
 		in := bytes.NewBuffer(raw)
@@ -30,7 +46,7 @@ func TestGoccyYamlParser(t *testing.T) {
 		enc := yaml2.NewEncoder(out, yaml2.Indent(2))
 		assert.NoError(t, enc.Encode(props))
 		assert.NotEqual(t, string(raw), out.String())
-		// problems:
+		// should be equal, but have problems:
 		// - indent
 		// - empty vs null
 	})
