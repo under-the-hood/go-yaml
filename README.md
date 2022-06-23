@@ -6,7 +6,7 @@ Research YAML parsers written on Go.
 
 In developing [✨Sparkle](https://sparkle.wiki/), I've encountered
 a need to select an appropriate library for handling YAML data
-because it is a format of front matter.
+because it is a format of **frontmatter**[^1].
 
 ## Requirements
 
@@ -45,8 +45,12 @@ is vital to maintaining the overall reliability of the application.
 
 ## The result
 
-Interim results or a detailed follow-up.[^1]
+Interim results or a detailed follow-up.[^2]
 
 <p align="right">made with ❤️ for everyone by <a href="https://www.octolab.org/">OctoLab</a></p>
 
-[^1]: work in progress
+[^1]: Frontmatter is YAML that you can add to the front of your Markdown file.
+It was first introduced by Jekyll and is a convenient way of adding metadata
+to your plaintext documents.
+
+[^2]: work in progress
