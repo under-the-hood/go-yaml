@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	yaml1 "github.com/goccy/go-yaml"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	yaml2 "gopkg.in/yaml.v3"
@@ -91,5 +92,32 @@ func TestGopkgYamlParser(t *testing.T) {
 		enc.SetIndent(2)
 		assert.NoError(t, enc.Encode(&props))
 		assert.Equal(t, string(raw), out.String())
+	})
+}
+
+func TestProperties(t *testing.T) {
+	f, err := os.Open("testdata/typical.yaml")
+	require.NoError(t, err)
+
+	raw, err := io.ReadAll(f)
+	require.NoError(t, err)
+	require.NoError(t, f.Close())
+
+	t.Run("gopkg yaml", func(t *testing.T) {
+		var props PropsVar2
+		in := bytes.NewBuffer(raw)
+		dec := yaml2.NewDecoder(in)
+		assert.NoError(t, dec.Decode(&props))
+
+		props.Set("uid", uuid.New())
+
+		out := bytes.NewBuffer(nil)
+		enc := yaml2.NewEncoder(out)
+		enc.SetIndent(2)
+		assert.NoError(t, enc.Encode(&props))
+		assert.NotEqual(t, string(raw), out.String())
+		// it should not be equal only by uid, but has another problems:
+		// - ordering
+		// - empty vs null
 	})
 }
