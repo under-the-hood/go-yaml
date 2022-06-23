@@ -27,12 +27,14 @@ func TestGoccyYamlParser(t *testing.T) {
 		assert.NoError(t, dec.Decode(&props))
 
 		out := bytes.NewBuffer(nil)
-		enc := yaml1.NewEncoder(out, yaml1.Indent(2))
+		enc := yaml1.NewEncoder(out,
+			yaml1.Indent(2),
+			yaml1.IndentSequence(true),
+		)
 		assert.NoError(t, enc.Encode(props))
 		assert.NotEqual(t, string(raw), out.String())
 		// it should be equal, but has problems:
 		// - ordering
-		// - indent
 		// - empty vs null
 	})
 
@@ -43,11 +45,13 @@ func TestGoccyYamlParser(t *testing.T) {
 		assert.NoError(t, dec.Decode(&props))
 
 		out := bytes.NewBuffer(nil)
-		enc := yaml1.NewEncoder(out, yaml1.Indent(2))
+		enc := yaml1.NewEncoder(out,
+			yaml1.Indent(2),
+			yaml1.IndentSequence(true),
+		)
 		assert.NoError(t, enc.Encode(props))
 		assert.NotEqual(t, string(raw), out.String())
 		// it should be equal, but has problems:
-		// - indent
 		// - empty vs null
 	})
 }
