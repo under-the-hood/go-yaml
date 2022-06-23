@@ -103,6 +103,25 @@ func TestProperties(t *testing.T) {
 	require.NoError(t, err)
 	require.NoError(t, f.Close())
 
+	t.Run("goccy yaml", func(t *testing.T) {
+		var props PropsVar1
+		in := bytes.NewBuffer(raw)
+		dec := yaml1.NewDecoder(in)
+		assert.NoError(t, dec.Decode(&props))
+
+		props.Set("uid", uuid.New())
+
+		out := bytes.NewBuffer(nil)
+		enc := yaml1.NewEncoder(out,
+			yaml1.Indent(2),
+			yaml1.IndentSequence(true),
+		)
+		assert.NoError(t, enc.Encode(&props))
+		assert.NotEqual(t, string(raw), out.String())
+		// it should not be equal only by uid, but has another problems:
+		// - empty vs null
+	})
+
 	t.Run("gopkg yaml", func(t *testing.T) {
 		var props PropsVar2
 		in := bytes.NewBuffer(raw)
