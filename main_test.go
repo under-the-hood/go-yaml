@@ -79,4 +79,17 @@ func TestGopkgYamlParser(t *testing.T) {
 		// - ordering
 		// - empty vs null
 	})
+
+	t.Run("deterministic", func(t *testing.T) {
+		var props yaml2.Node
+		in := bytes.NewBuffer(raw)
+		dec := yaml2.NewDecoder(in)
+		assert.NoError(t, dec.Decode(&props))
+
+		out := bytes.NewBuffer(nil)
+		enc := yaml2.NewEncoder(out)
+		enc.SetIndent(2)
+		assert.NoError(t, enc.Encode(&props))
+		assert.Equal(t, string(raw), out.String())
+	})
 }
